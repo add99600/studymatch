@@ -10,6 +10,10 @@ import Posterpage from '../posterpage/Posterpage.jsx';
 import MyPage from '../mypage/MyPage.jsx'
 import Signup from '../registerpage/Signup';
 import CommWrite from '../makegroup/CommWrite';
+import ManageList from '../managerpage/ManageList';
+import Managerpage from '../managerpage/Managerpage';
+import ManagerModify from '../managerpage/ManagerModify';
+import StudyGroup from '../study/StudyGroup';
 
 function App() {
     return (
@@ -22,6 +26,10 @@ function App() {
           <Route path='/poster' element={<Posterpage />} />
           <Route path='/commwrite' element={<CommWrite />} />
           <Route path='/mypage' element={<MyPage />} />
+          <Route path='/ManageList' element={<ManageList />} />
+          <Route path='/Managerpage' element={<Managerpage />} />
+          <Route path='/ManagerModify' element={<ManagerModify />} />
+          <Route path='/StudyGroup' element={<StudyGroup />} />
         </Routes>
       </BrowserRouter>
     );
