@@ -266,7 +266,7 @@ function Managerpage() {
                 방장 변경
               </button>&nbsp;&nbsp;
             </a>
-            <a href="#" target="_blank">
+            <a href="GroupDeletion" target="_blank">
               <button type="button" value="">
                 그룹 삭제
               </button>

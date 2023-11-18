@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom';
 
 
 const CommWrite = () => {
-
+  
+  const handleClose = () => {
+    window.close();
+  };
   return (
     <div className="container marketing" style={{ paddingTop: '50px' }}>
       <div className="row featurette" style={{ height: '1000px' }}>
@@ -65,7 +68,7 @@ const CommWrite = () => {
                   </Button>
                 </Link>
                 <Link>
-                <Button variant="danger" style={{ width: '100px', height: '40px', margin: '5px', fontSize: '1.2rem' }}>
+                <Button variant="danger" onClick={handleClose} style={{ width: '100px', height: '40px', margin: '5px', fontSize: '1.2rem' }}>
                   취소
                 </Button>
                 </Link>

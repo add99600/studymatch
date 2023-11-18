@@ -14,6 +14,9 @@ import ManageList from '../managerpage/ManageList';
 import Managerpage from '../managerpage/Managerpage';
 import ManagerModify from '../managerpage/ManagerModify';
 import StudyGroup from '../study/StudyGroup';
+import LeaveGroup from '../study/LeaveGroup';
+import GroupEvaluation from '../study/GroupEvaluation';
+import GroupDeletion from '../managerpage/GroupDeletion';
 
 function App() {
     return (
@@ -30,6 +33,9 @@ function App() {
           <Route path='/Managerpage' element={<Managerpage />} />
           <Route path='/ManagerModify' element={<ManagerModify />} />
           <Route path='/StudyGroup' element={<StudyGroup />} />
+          <Route path='/LeaveGroup' element={<LeaveGroup />} />
+          <Route path='/GroupEvaluation' element={<GroupEvaluation />} />
+          <Route path='/GroupDeletion' element={<GroupDeletion />} />
         </Routes>
       </BrowserRouter>
     );
@@ -118,7 +124,7 @@ const Home = () => {
           <Pagination.Last />
         </Pagination>
       </div>
-      <Link to='/commwrite'>
+      <Link to='/commwrite' target='_blank'>
         <button className="custom-btn btn-11">
           그룹 만들기
         </button>

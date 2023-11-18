@@ -57,3 +57,18 @@ object-fit: cover;
 .content-wrapper {
   margin: 0 250px; /* 왼쪽과 오른쪽 마진을 20px로 설정 */
 }
+
+.buttonbox{
+  align-content: right;
+
+}
+
+.listbutton {
+  background-Color: 'gray';
+  color: '#fff';
+  padding: '10px 20px';
+  border: 'none';
+  border-Radius: '5px';
+  cursor: 'pointer';
+  margin: '10px';
+}

@@ -3,7 +3,7 @@ import './Mypage.css';
 
 function MyPage() {
   return (
-    <div id="face" className="face" style={{ fontSize: '1.4rem', background: 'gray' }}>
+    <><div id="face" className="face" style={{ fontSize: '1.4rem', background: 'gray' }}>
       <div className="face f1">
         <div className="con1">
           <div className="circle">
@@ -13,7 +13,14 @@ function MyPage() {
         </div>
       </div>
       <div className="face f2"></div>
-    </div>
+    </div><div className='buttonbox'>
+        <button type="button" className='listbutton'>
+          나의 그룹
+        </button>
+        <button type="button" className='listbutton'>
+          그룹 관리
+        </button>
+      </div></>
   );
 }
 

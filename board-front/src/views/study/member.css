@@ -95,12 +95,12 @@ table.boardTable {
 }
 
 .bodyLeft {
-    width: 40%;
+    width: 50%;
     box-sizing: border-box;
 }
 
 .bodyRight {
-    width: 60%;
+    width: 50%;
     box-sizing: border-box;
 }
 

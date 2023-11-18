@@ -221,6 +221,20 @@ function StudyGroup() {
                     </tr>
                   </tbody>
                 </table>
+                <div className="page">
+                  <span>
+                    <a href="#!">←</a>
+                  </span>
+                  <span>
+                    <a href="#!">1</a>
+                  </span>
+                  <span>
+                    <a href="#!">2</a>
+                  </span>
+                  <span>
+                    <a href="#!">→</a>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -230,8 +244,8 @@ function StudyGroup() {
           </div>
         </section>
         <div className="btnBox">
-          <a href="#">퇴부신청</a>
-          <a href="#">그룹평가</a>
+          <a href="LeaveGroup" target='_blank'>퇴부신청</a>
+          <a href="GroupEvaluation" target='_blank'>그룹평가</a>
         </div>
       </main>
     </div>
