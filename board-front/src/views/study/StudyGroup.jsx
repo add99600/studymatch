@@ -169,19 +169,20 @@ function StudyGroup() {
                     <a href="#!">→</a>
                   </span>
                 </div>
-              </div>
-            </div>
-
-            <div className="divBox">
-              <div className="container">
-                <h2>게시판</h2>
-                <div className="aside">
+                <div style={{textAlign : 'right', padding : '0px 20px'}}>
                   <span>
                     <button type="button" value="">
                       추가
                     </button>
                   </span>
                 </div>
+              </div>
+            </div>
+
+            <div className="divBox">
+              <div className="container">
+                <h2>게시판</h2>
+                
                 <table className="boardTable">
                   <thead>
                     <tr>
@@ -233,6 +234,13 @@ function StudyGroup() {
                   </span>
                   <span>
                     <a href="#!">→</a>
+                  </span>
+                </div>
+                <div style={{textAlign : 'right', padding : '0px 20px'}}>
+                  <span>
+                    <button type="button" value="">
+                      추가
+                    </button>
                   </span>
                 </div>
               </div>
