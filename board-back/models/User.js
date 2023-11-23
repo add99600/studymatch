@@ -1,59 +1,99 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt');
-const saltRound = 10 // 10자리 1salt를 만들어서 암호화
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+const jwt = require("jsonwebtoken");
 
 const userSchema = mongoose.Schema({
-    name: {
-        type: String,
-        maxlength: 50
-    },
-    email: {
-        type: String,
-        trim: true, // dlghdwo5153 @gmail.com 같은 스페이스 없앰
-        unique: 1 // 유니크 속성
-    },
-    password: {
-        type: String,
-        minlength: 5
-    },
-    lastname: {
-        type: String,
-        maxlength: 50
-    },
-    role: {
-        type: Number,
-        default: 0 // 기본 값 0
-    },
-    image: {
-        type: String
-    },
-    token: {
-        type: String
-    },
-    tokenExp: { // 토큰 유효기간
-        type: Number
-    }
+  name:{
+      type:String,
+      maxlength:50
+  },
+  email:{
+      type:String,
+      trim:true,
+      unique:1
+  },
+  password:{
+      type:String,
+      maxlength:500
+  },
+  lastname:{
+      type: String,
+      maxlength:50
+  },
+  role:{
+      type:Number,
+      default:0
+  },
+  image: String,
+  token:{
+      type:String
+  },
+  tokenExp:{
+      type:Number
+  }
 })
 
-userSchema.pre('save', function(next) {
-    var user = this; // userSchema를 가르킴
+userSchema.pre("save", function ( next ) {
+    var user = this;
 
-    // 모델 안 password가 변환 될 때만 bcrypt로 암호화
-    if(user.isModified('password')){ 
-        // 비밀번호 암호화
-        bcrypt.genSalt(saltRound, function(err, salt) {
+    if (user.isModified('password')){
+        bcrypt.genSalt(saltRounds, function(err, salt){
             if(err) return next(err)
-
+    
             bcrypt.hash(user.password, salt, function(err, hash) {
                 if(err) return next(err)
                 user.password = hash
                 next()
             })
         })
+    } else {
+        next()
     }
-})
+});
 
-const User = mongoose.model('User', userSchema) // User 모델 정의
+userSchema.methods.comparePassword = function(plainPassword) {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(plainPassword, this.password, (err, isMatch) => {
+        if (err) return reject(err);
+        resolve(isMatch);
+      });
+    });
+  };
 
-// 모델을 다른 파일에서도 사용하도록 export
-module.export = { User }
+
+userSchema.methods.generateToken = async function() {
+    var user = this;
+    // jsonwebtoken을 이용해서 token 생성하기
+    var token = jwt.sign(user._id.toHexString(), 'secretToken')
+  
+    user.token = token;
+  
+    // save 메서드는 이제 프로미스를 반환합니다.
+    try {
+      await user.save();
+      return user;
+    } catch (err) {
+      throw err;
+    }
+}
+
+userSchema.statics.findByToken = function(token, cb) {
+    var user = this;
+
+    jwt.verify(token, "secretToken", function(err, decoded) {
+        if (err) return cb(err);
+
+        user.findOne({ "_id": decoded._id, "token": token }).exec()
+        .then(user => {
+            cb(null, user);
+        })
+        .catch(err => {
+            cb(err);
+        });
+    });
+}
+
+const User = mongoose.model('User', userSchema)
+
+module.exports = { User }

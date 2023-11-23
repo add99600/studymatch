@@ -2,36 +2,110 @@ const express = require('express')
 const app = express()
 const port = 5000
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const { User } = require("./models/User")
-const config = require('./config/key');
-
-// client에서 오는 정보를 서버에서 분석해서 가져올 수 있게 하는것
-app.use(bodyParser.urlencoded({extended: true}))
-// application/json
-app.use(bodyParser.json);
-
+const config = require('./config/key')
+const { auth } = require('./middleware/auth')
 const mongoose = require('mongoose')
+const cors = require('cors')
+
+
+app.use(cors())
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
+app.use(cookieParser());
+
 
 mongoose // 몽고db와 연결
-.connect(config.mongoURI
+.connect(config.mongoURI)
 .then(() => console.log('MongoDB Connected...'))
-.catch(err => console.log(err)))
+.catch(err => console.log(err))
 
 
+app.get('/', (req, res) => res.send('hello word'))
 
-app.get('/', (req, res) => res.send('반갑다!'))
 
-app.post('/register', (req, res) => {
-    //회원 가입 할때 필요한 정보들을 client에서 가져오면
-    //그것들을 데이터 베이스에 넣어준다.
-    const user = new User(req.body)
+app.post('/api/user/register', async (req, res) => {
+    try {
+        const user = new User(req.body);
+        const userInfo = await user.save();
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, err });
+    }
+});
 
-    user.save((err, userInfo)=>{
-        if(err) return res.json({ success: false, err})
-        return res.status(200).json({
-            success: true
-        })
+
+app.post("/api/user/login", async (req, res) => {
+    try {
+      const user = await User.findOne({ email: req.body.email });
+  
+      if (!user) {
+        return res.json({
+          loginSuccess: false,
+          message: "잘못된 정보입니다.",
+        });
+      }
+  
+      const isMatch = await user.comparePassword(req.body.password);
+  
+      if (!isMatch) {
+        return res.json({
+          loginSuccess: false,
+          message: "비밀번호가 틀렸습니다.",
+        });
+      }
+  
+      await user.generateToken();
+  
+      res.cookie("x_auth", user.token).status(200).json({
+        loginSuccess: true,
+        userId: user._id,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("서버 에러");
+    }
+});
+
+
+app.get('/api/users/auth', auth ,(req, res) => {
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email: req.user.email,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        role: req.user.role,
+        image: req.user.image
     })
 })
+
+app.get("/api/users/logout", auth, (req, res) => {
+
+    User.findOneAndUpdate(
+      { _id: req.user._id },
+      { token: "" },
+      { new: true },
+      (err, user) => {
+        if (err) {
+          console.error("로그아웃 실패:", err);
+          return res.status(500).json({ success: false, error: "로그아웃 실패" });
+        }
+        if (!user) {
+          return res.status(404).json({ success: false, error: "사용자를 찾을 수 없음" });
+        }
+        return res.status(200).send({
+          success: true,
+        });
+      }
+    );
+  });
+  
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
