@@ -1,8 +1,55 @@
 import React from 'react';
+import axios from 'axios';
+import { useState } from 'react';
+import Cookies from 'js-cookie';
 
 function LoginPage() {
-  const handleLogin = () => {
-    // Handle login logic
+
+  const [Email, setEmail] = useState('');
+  const [Password, setPassword] = useState('');
+
+  const onEmailHandler = (event) => {
+    setEmail(event.currentTarget.value);
+  };
+
+  const onPasswordHandler = (event) => {
+    setPassword(event.currentTarget.value);
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+  
+    const body = {
+      email: Email,
+      password: Password,
+    };
+  
+    axios.post('/api/user/login', body)
+      .then((response) => {
+        if (response.data.loginSuccess) {
+          
+          console.log('로그인 성공!');
+          console.log('사용자 ID:', response.data.userId);
+
+          const token = Cookies.get('x_auth');
+          console.log('서버로부터 받은 토큰:', token);
+      
+          window.location.reload(); // 로그인 성공 시 페이지 새로고침
+          alert('환영합니다!');
+
+          //window.location.href = '/';
+
+        } else {
+          alert('입력된 정보가 맞지 않습니다.');
+          console.error('다른 에러 발생:', response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('서버 요청 실패:', error);
+
+        // 요청 실패 시 에러 처리
+        alert('서버 요청에 실패했습니다. 다시 시도해주세요.');
+      });
   };
 
   const styles = {
@@ -127,16 +174,26 @@ function LoginPage() {
         <div className="shape" style={styles.shapeFirst}></div>
         <div className="shape" style={styles.shapeLast}></div>
       </div>
-      <form style={styles.form}>
+      <form onSubmit={onSubmitHandler} style={styles.form}>
         <h3 style={styles.formHeading}>Login Here</h3>
         <label style={styles.label} htmlFor="username">Username</label>
-        <input style={styles.input} type="text" placeholder="Email" id="username" />
+        <input 
+          style={styles.input} 
+          onChange={onEmailHandler}
+          type="text" 
+          placeholder="Email" 
+          id="username" />
+
         <label style={styles.label} htmlFor="password">Password</label>
-        <input style={styles.input} type="password" placeholder="Password" id="password" />
-        <button style={styles.button} onClick={handleLogin}>Log In</button>
-        <div style={styles.hidden}>
-          <a>작성된 정보가 일치하지 않습니다</a>
-        </div>
+        <input 
+          style={styles.input} 
+          onChange={onPasswordHandler}
+          type="password" 
+          placeholder="Password" 
+          id="password" />
+
+        <button type="submit" style={styles.button}>Log In</button>
+
         {/*
         <div style={styles.social} className="social">
           <div style={styles.socialDiv} className="go"><i className="fab fa-google" style={styles.socialIcon}></i> Google</div>
