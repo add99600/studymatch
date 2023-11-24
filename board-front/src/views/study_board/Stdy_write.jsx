@@ -1,10 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 
-const CommWrite = () => {
+const Stdywrite = () => {
+
+  const navigate = useNavigate();
 
   const [Title, setTitle] = useState('');
   const [Content, setContent] = useState('');
@@ -18,7 +21,6 @@ const CommWrite = () => {
     setContent(event.target.value);
   };
 
-
   const onSubmitHandler = (event) => {
     event.preventDefault();
     console.log('onSubmitHandler 호출됨');
@@ -27,17 +29,17 @@ const CommWrite = () => {
       title: Title,
       content: Content,
     };
-  
-    axios.post('/api/group/posts', data)
-    .then((response) => {
-      console.log(response.data);
-      if (response.data.success)
-        console.log('글 조회 성공');
-    })
-    .catch((error) => {
-      console.error('서버 요청 실패:', error);
-    });
-  }
+
+    axios.post('/api/community/posts', data)
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.success) 
+          console.log('글 등록 성공!');
+      })
+      .catch((error) => {
+        console.error('서버 요청 실패:', error);
+      });
+  };
 
   return (
     <div className="container marketing" style={{ paddingTop: '50px' }}>
@@ -46,41 +48,42 @@ const CommWrite = () => {
           <article id="article1">
             <div className="board_wrap">
               <div className="board_title">
-                <h2>원하는 그룹을 만들어 보세요</h2>
+                <h2>원하는 게시글을 작성하세요</h2>
               </div>
               <br/>
               <form className="board_write_wrap" onSubmit={onSubmitHandler}>
                 <div className="board_write">
                   <div className="title">
                     <dl>
-                      <dt>그룹 이름을 작성해주세요</dt>
+                      <dt>글 제목을 작성해주세요</dt>
                       <dd>
                         <input 
                           type="title" 
+                          name="title"
                           onChange={onTitleHandler}
-                          placeholder="그룹 이름 작성" 
+                          placeholder="글 제목 작성" 
                           id="title" 
                           rows={8} style={{ fontSize: '1.4rem', width: '100%' }} />
                       </dd>
                     </dl>
                   </div>
                   <label htmlFor="image" className="image-label">
-                    홍보에 사용할 텍스트를 입력해주세요
+                    텍스트를 입력해주세요
                   </label>
                   <div className="cont">
                     <textarea 
-                      onChange={onContentHandler}
                       placeholder="내용 입력" 
+                      name="content"
+                      onChange={onContentHandler}
                       id="content" 
                       rows={8} style={{ fontSize: '1.4rem', width: '100%' }}>
                     </textarea>
                   </div>
                 </div>
                 <div className="bt_wrap">
-                  <Button variant="dark" type="submit">
-                    작성
-                  </Button>
-
+                <Button variant="dark" type="submit">
+                  작성
+                </Button>
                 <Link>
                 <Button variant="danger" style={{ width: '100px', height: '40px', margin: '5px', fontSize: '1.2rem' }}>
                   취소
@@ -96,4 +99,4 @@ const CommWrite = () => {
   );
 };
 
-export default CommWrite;
+export default Stdywrite;

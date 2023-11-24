@@ -38,6 +38,9 @@ function Header() {
           {token ? (
             <>
               <Nav.Link>
+                <Link to="/StudyGroup" style={linkStyle}>내 스터디</Link>
+              </Nav.Link>
+              <Nav.Link>
                 <Link to="/mypage" style={linkStyle}>마이페이지</Link>
               </Nav.Link>
               <Nav.Link onClick={onClickhandler}>

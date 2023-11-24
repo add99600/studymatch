@@ -3,6 +3,8 @@ import { Button } from 'react-bootstrap';
 import Pagination from 'react-bootstrap/Pagination';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../mainpage/Home.css'
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 
 import Header from '../../layouts/header/Header.jsx';
 import LoginPage from '../loginpage/LoginPage.jsx';
@@ -17,6 +19,8 @@ import StudyGroup from '../study/StudyGroup';
 import LeaveGroup from '../study/LeaveGroup';
 import GroupEvaluation from '../study/GroupEvaluation';
 import GroupDeletion from '../managerpage/GroupDeletion';
+import Stdywrite from '../study_board/Stdy_write';
+
 
 function App() {
     return (
@@ -36,6 +40,7 @@ function App() {
           <Route path='/LeaveGroup' element={<LeaveGroup />} />
           <Route path='/GroupEvaluation' element={<GroupEvaluation />} />
           <Route path='/GroupDeletion' element={<GroupDeletion />} />
+          <Route path='/Stdywrite' element={<Stdywrite />} />
         </Routes>
       </BrowserRouter>
     );
@@ -48,6 +53,45 @@ const Home = () => {
     justifyContent: 'center',
     margin: '50px 0', // 테이블과 페이지넘버 간격
   };
+
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalDataItems, setTotalDataItems] = useState(0); // 총 데이터 개수
+
+  const pageSize = 5; // 한 페이지 게시물 수
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
+  const fetchData = () => {
+
+    axios.get('/api/group/posts')
+    .then((response) => {
+      if (response.data.success);
+        console.log(response.data)
+        const reversedPosts = response.data.posts.reverse();
+        setTotalDataItems(reversedPosts.length); // 총 데이터 길이
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        setPosts(reversedPosts.slice(startIndex, endIndex));
+      })
+      .catch((error) => {
+        console.error('서버 요청 실패:', error);
+    });
+  }
+
+  const fetchNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  
+  const fetchPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const totalPages = Math.ceil(totalDataItems / pageSize);
 
   return (
     <section className="notice">
@@ -77,52 +121,45 @@ const Home = () => {
             <thead>
               <tr>
                 <th scope="col" className="th-num">번호</th>
-                <th scope="col" className="th-title">제목</th>
+                <th scope="col" className="th-title">그룹명</th>
                 <th scope="col" className="th-date">등록일</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>3</td>
+            {posts.map((post, index) => (
+              <tr key={post._id}>
+                <td>{index + 1}</td>
                 <th>
-                  <Link to="/poster">
-                    <a>토익 스터디 그룹 인원 모집합니다</a>
+                  <Link to={`/StudyGroup`}>
+                    <a>{post.title}</a>
                   </Link>
-                  <p>테스트</p>
+                  <p>{post.content}</p>
                 </th>
-                <td>2017.07.13</td>
+                <td>{new Date(post.createdAt).toLocaleDateString()}</td>
               </tr>
-
-              <tr>
-                <td>2</td>
-                <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
-                <td>2017.06.15</td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
-                <td>2017.06.15</td>
-              </tr>
-            </tbody>
+            ))}
+          </tbody>
           </table>
         </div>
       </div>
 
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <div style={paginationContainerStyle}>
-        <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
+      <Pagination>
+        <Pagination.Prev onClick={fetchPrevPage} />
 
-          <Pagination.Item>{1}</Pagination.Item>
-          <Pagination.Item>{2}</Pagination.Item>
-          <Pagination.Item>{3}</Pagination.Item>
-          <Pagination.Item>{4}</Pagination.Item>
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+          <Pagination.Item
+            key={pageNumber}
+            active={pageNumber === currentPage}
+            onClick={() => setCurrentPage(pageNumber)}
+          >
+            {pageNumber}
+          </Pagination.Item>
+        ))}
 
-          <Pagination.Next />
-          <Pagination.Last />
-        </Pagination>
+        <Pagination.Next onClick={fetchNextPage} />
+      </Pagination>
       </div>
       <Link to='/commwrite' target='_blank'>
         <button className="custom-btn btn-11">

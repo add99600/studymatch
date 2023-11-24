@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './common.css';
 import './member.css';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+
 
 function StudyGroup() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -47,6 +50,28 @@ function StudyGroup() {
 
   const calendarRows = generateCalendar();
 
+
+  const [postData, setPostData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios({
+          method: 'GET',
+          url: '/api/community/posts',
+        });
+        console.log(response.data);
+        setPostData(response.data.posts || []);
+      } catch (error) {
+        console.error('서버 요청 실패:', error);
+        alert('불러오기에 실패했습니다.');
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  
   return (
     <div className="container marketing">
       <main className="mainBox">
@@ -182,46 +207,37 @@ function StudyGroup() {
             <div className="divBox">
               <div className="container">
                 <h2>게시판</h2>
-                
-                <table className="boardTable">
-                  <thead>
-                    <tr>
-                      <th>제목</th>
-                      <th>글쓴이</th>
-                      <th>작성일</th>
-                      <th>조회수</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>게시판1</td>
-                      <td>박예진</td>
-                      <td>2023-10-04</td>
-                      <td>2</td>
-                      <td>
-                        <span>
-                          <button type="button" value="">
-                            보기
-                          </button>
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>게시판 2</td>
-                      <td>박예진</td>
-                      <td>2023-10-04</td>
-                      <td>2</td>
-                      <td>
-                        <span>
-                          <button type="button" value="">
-                            보기
-                          </button>
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+
+                  <table className="boardTable">
+                    <thead>
+                      <tr>
+                        <th>제목</th>
+                        <th>글쓴이</th>
+                        <th>작성일</th>
+                        <th>조회수</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {postData.map((post, index) => (
+                        <tr key={index}>
+                          <td>{post.title}</td>
+                          <td>{post.author.email}</td>
+                          <td>{new Date(post.createdAt).toLocaleDateString()}</td>
+                          <td>1</td>
+                          <td>
+                            <span>
+
+                                <button type="button">보기</button>
+
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+
                 <div className="page">
                   <span>
                     <a href="#!">←</a>
@@ -238,8 +254,10 @@ function StudyGroup() {
                 </div>
                 <div style={{textAlign : 'right', padding : '0px 20px'}}>
                   <span>
-                    <button type="button" value="">
-                      추가
+                    <button>
+                      <Link to="/Stdywrite">
+                        추가
+                      </Link>
                     </button>
                   </span>
                 </div>
