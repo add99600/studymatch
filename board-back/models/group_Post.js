@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const communityPostSchema = new mongoose.Schema({
+const grouppostSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -9,10 +9,6 @@ const communityPostSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
-  },
-  name: {
-    type: String,
-    required: false,
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
@@ -46,5 +42,5 @@ const communityPostSchema = new mongoose.Schema({
   ],
 });
 
-const CommunityPost = mongoose.model('CommunityPost', communityPostSchema);
-module.exports = { CommunityPost };
+const groupPost = mongoose.model('groupPost', grouppostSchema);
+module.exports = { groupPost };

@@ -8,13 +8,19 @@ let auth = (req, res, next) => {
 
     // 토큰을 복호화 한 후 유저를 찾는다
     User.findByToken(token, (err, user) => {
-        if(err) throw err;
-        if(!user) return res.json({ isAuth: false, error: true })
+        if (err) {
+            console.error(err);
+            return res.json({ isAuth: false, error: true });
+        }
+        if (!user) {
+            console.log('토큰 디코딩 후 사용자를 찾을 수 없음');
+            return res.json({ isAuth: false, error: true });
+        }
 
         req.token = token;
         req.user = user;
         next();
-    })
+    });
 }
 
 module.exports = { auth };

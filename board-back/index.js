@@ -23,10 +23,16 @@ mongoose // 몽고db와 연결
 .then(() => console.log('MongoDB Connected...'))
 .catch(err => console.log(err))
 
+const boardRouter = require('./routes/board/board'); // board.js 파일을 가져옴
+app.use('/', boardRouter)
+
+const groupRouter = require('./routes/group/group'); // group.js 파일을 가져옴
+app.use('/', groupRouter)
+
 
 app.get('/', (req, res) => res.send('hello word'))
 
-
+// 회원가입
 app.post('/api/user/register', async (req, res) => {
     try {
         const user = new User(req.body);
@@ -38,7 +44,7 @@ app.post('/api/user/register', async (req, res) => {
     }
 });
 
-
+// 로그인
 app.post("/api/user/login", async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
@@ -71,7 +77,7 @@ app.post("/api/user/login", async (req, res) => {
     }
 });
 
-
+// 사용자 정보
 app.get('/api/users/auth', auth ,(req, res) => {
     res.status(200).json({
         _id: req.user._id,
@@ -85,26 +91,27 @@ app.get('/api/users/auth', auth ,(req, res) => {
     })
 })
 
-app.get("/api/users/logout", auth, (req, res) => {
-
-    User.findOneAndUpdate(
+// 로그아웃 처리
+app.get("/api/users/logout", auth, async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate(
       { _id: req.user._id },
       { token: "" },
-      { new: true },
-      (err, user) => {
-        if (err) {
-          console.error("로그아웃 실패:", err);
-          return res.status(500).json({ success: false, error: "로그아웃 실패" });
-        }
-        if (!user) {
-          return res.status(404).json({ success: false, error: "사용자를 찾을 수 없음" });
-        }
-        return res.status(200).send({
-          success: true,
-        });
-      }
+      { new: true }
     );
-  });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: "사용자를 찾을 수 없음" });
+    }
+
+    return res.status(200).send({
+      success: true,
+    });
+  } catch (err) {
+    console.error("로그아웃 실패:", err);
+    return res.status(500).json({ success: false, error: "로그아웃 실패" });
+  }
+});
   
 
 

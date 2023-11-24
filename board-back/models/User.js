@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
+const ObjectId = require('mongodb').ObjectId;
 
 const userSchema = mongoose.Schema({
   name:{
@@ -69,7 +70,7 @@ userSchema.methods.generateToken = async function() {
   
     user.token = token;
   
-    // save 메서드는 이제 프로미스를 반환합니다.
+    // save 메서드는 프로미스를 반환
     try {
       await user.save();
       return user;
@@ -78,21 +79,18 @@ userSchema.methods.generateToken = async function() {
     }
 }
 
-userSchema.statics.findByToken = function(token, cb) {
-    var user = this;
-
-    jwt.verify(token, "secretToken", function(err, decoded) {
-        if (err) return cb(err);
-
-        user.findOne({ "_id": decoded._id, "token": token }).exec()
-        .then(user => {
-            cb(null, user);
-        })
-        .catch(err => {
-            cb(err);
-        });
-    });
-}
+userSchema.statics.findByToken = async function (token, cb) {
+    const user = this;
+  
+    try {
+      const decoded = jwt.verify(token, "secretToken");
+      const foundUser = await user.findOne({ "_id": decoded, "token": token });
+  
+      cb(null, foundUser);
+    } catch (err) {
+      cb(err);
+    }
+  };
 
 const User = mongoose.model('User', userSchema)
 
