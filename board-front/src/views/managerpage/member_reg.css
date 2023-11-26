@@ -69,6 +69,8 @@ h2 {
 table.boardTable {
     width: 100%;
     border-spacing: 0;
+    text-align: center;
+    border : 1;
 }
 
 .container {
