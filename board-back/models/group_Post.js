@@ -45,6 +45,23 @@ const grouppostSchema = new mongoose.Schema({
       type: String,
     },
   ],
+  applicants: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      isApproved: {
+        type: Boolean,
+        default: false,
+      },
+      additionalField: {
+        type: String,
+        default: '',
+      },
+    },
+  ],
 });
 
 const groupPost = mongoose.model('groupPost', grouppostSchema);

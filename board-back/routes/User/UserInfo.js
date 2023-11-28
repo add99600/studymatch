@@ -30,7 +30,7 @@ router.post('/api/updateUserMakegroup', auth, async (req, res) => {
 });
 
 
-// 쿠키값이 일치하는 사용자 조회
+// 쿠키값이 일치하는 사용자 정보 조회
 router.post('/api/updateUserMakegroup/find', auth, async (req, res) => {
   try {
     const { token } = req.body;
@@ -46,13 +46,14 @@ router.post('/api/updateUserMakegroup/find', auth, async (req, res) => {
     }
 
     // 사용자가 가진 Makegroup 및 ingroup 반환
-    const { Makegroup, ingroup } = user;
+    const { Makegroup, ingroup, _id } = user;
     
     return res.status(200).json({
       success: true,
       user: {
         Makegroup,
         ingroup,
+        _id
       },
     });
   } catch (error) {
@@ -64,5 +65,6 @@ router.post('/api/updateUserMakegroup/find', auth, async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;

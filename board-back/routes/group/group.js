@@ -136,6 +136,7 @@ router.post("/api/group/posts/:postId/comments", auth, async (req, res) => {
   }
 });
 
+// 그룹 내 게시판 조회
 router.get("/api/group/posts/:postId/comments", auth, async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -161,4 +162,33 @@ router.get("/api/group/posts/:postId/comments", auth, async (req, res) => {
     });
   }
 });
+
+// 그룹 신청
+router.post("/api/group/apply/:postId", auth, async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const { additionalField } = req.body;
+    const post = await groupPost.findById(postId);
+
+    post.applicants.push({
+      userId: req.user._id,
+      additionalField,
+    });
+
+    await post.save(); 
+
+    return res.status(200).json({
+      success: true,
+      message: '성공적으로 신청되었습니다.',
+      post: post,
+    });
+  } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: "신청에 실패했습니다.",
+        error: err.message,
+      });
+  }
+})
+
 module.exports = router;
