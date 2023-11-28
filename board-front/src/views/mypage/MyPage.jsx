@@ -1,26 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Mypage.css';
+import MygroupList from '../study/MygroupList';
+import ManageList from '../managerpage/ManageList';
 
 function MyPage() {
+  const [currentPage, setCurrentPage] = useState('소속그룹'); // Default page
+
+  const handleButtonClick = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <><div id="face" className="face" style={{ fontSize: '1.4rem', background: 'gray' }}>
-      <div className="face f1">
-        <div className="con1">
-          <div className="circle">
-            <img id="circle-img" src="https://i.namu.wiki/i/FgPlIpSLGsre44NP7psFtRWm012t7zln8vueYbUFjJ-jDYQIR8hkH8-wd59ZzWA5oM9tyWQ_oaSChi_Vv_5kZQ.webp" alt="Profile Image" />
+    <>
+      <div id="face" className="face" style={{ fontSize: '1.4rem', background: 'gray' }}>
+        <div className="face f1">
+          <div className="con1">
+            <div className="circle">
+              <img
+                id="circle-img"
+                src="https://i.namu.wiki/i/FgPlIpSLGsre44NP7psFtRWm012t7zln8vueYbUFjJ-jDYQIR8hkH8-wd59ZzWA5oM9tyWQ_oaSChi_Vv_5kZQ.webp"
+                alt="Profile Image"
+              />
+            </div>
+            <strong
+              id="name"
+              style={{
+                paddingLeft: '30px',
+                width: '400px',
+                height: '100px',
+                textAlign: 'left',
+                alignItems: 'center',
+                marginTop: '45px',
+                fontSize: '3.5rem',
+              }}
+            >
+              이홍재
+            </strong>
           </div>
-          <strong id="name" style={{ paddingLeft: '30px', width: '400px', height: '100px', textAlign: 'left', alignItems: 'center', marginTop: '45px', fontSize: '3.5rem' }}>이홍재</strong>
         </div>
-      </div>
-      <div className="face f2"></div>
-    </div><div className='buttonbox'>
-        <button type="button" className='listbutton'>
-          나의 그룹
-        </button>
-        <button type="button" className='listbutton'>
-          그룹 관리
-        </button>
-      </div></>
+        <div className="face f2">
+        </div>
+        </div>
+        <div className='body'>
+          <div style={{ marginTop: '20px' }}>
+            <button onClick={() => handleButtonClick('소속그룹')}>나의 소속그룹</button>
+            <button onClick={() => handleButtonClick('그룹관리')}>나의 그룹 관리</button>
+          </div>
+          <div style={{ marginTop: '20px' }}>
+            {currentPage === '소속그룹' && 
+              <p> <MygroupList></MygroupList> </p>}
+            {currentPage === '그룹관리' &&
+              <p> <ManageList></ManageList> </p>}
+          </div>
+        </div>
+      
+    </>
   );
 }
 

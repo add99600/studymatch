@@ -20,7 +20,7 @@ import LeaveGroup from '../study/LeaveGroup';
 import GroupEvaluation from '../study/GroupEvaluation';
 import GroupDeletion from '../managerpage/GroupDeletion';
 import Stdywrite from '../study_board/Stdy_write';
-
+import MygroupList from '../study/MygroupList';
 
 function App() {
     return (
@@ -41,6 +41,7 @@ function App() {
           <Route path='/GroupEvaluation' element={<GroupEvaluation />} />
           <Route path='/GroupDeletion' element={<GroupDeletion />} />
           <Route path='/Stdywrite' element={<Stdywrite />} />
+          <Route path='/MygroupList' element={<MygroupList />} />
         </Routes>
       </BrowserRouter>
     );

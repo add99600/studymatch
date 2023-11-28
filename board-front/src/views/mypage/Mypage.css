@@ -72,3 +72,9 @@ object-fit: cover;
   cursor: 'pointer';
   margin: '10px';
 }
+
+.body{
+  margin: 0, auto;
+  align-items: center;
+  margin : 30px;
+}

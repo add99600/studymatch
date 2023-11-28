@@ -38,14 +38,14 @@ function Managerpage() {
         <div className="divBox1">
           <div className="container">
             <h2>멤버관리</h2>
-
-            <table className="boardTable" border="1">
+            <form>
+            <table className="boardTable">
               <colgroup>
                 <col width="20%" />
                 <col width="20%" />
                 <col width="20%" />
-                <col width="20%" />
-                <col width="20%" />
+                <col width="30%" />
+                <col width="10%" />
               </colgroup>
               <thead>
                 <tr>
@@ -53,13 +53,13 @@ function Managerpage() {
                   <th>성별</th>
                   <th>스터디출석율</th>
                   <th>직급</th>
-                  <th>회원정보(가입정보/퇴장)</th>
+                  <th>퇴장</th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr>
-                  <td>박예진</td>
+                  <td><a href='../Mypage' target='_blank'>박예진</a></td>
                   <td>여</td>
                   <td>100%</td>
                   <td>
@@ -78,17 +78,14 @@ function Managerpage() {
                       <option value="">그룹원</option>
                     </select>
                   </td>
-                  <td className="">
-                    <button type="button" value="">
-                      정보
-                    </button>&nbsp;&nbsp;
+                  <td className="">     
                     <button type="button" value="">
                       퇴장
                     </button>
                   </td>
                 </tr>
                 <tr>
-                  <td>박예진</td>
+                  <td><a href='../Mypage' target='_blank'>박예진</a></td>
                   <td>여</td>
                   <td>100%</td>
                   <td>
@@ -109,15 +106,12 @@ function Managerpage() {
                   </td>
                   <td className="">
                     <button type="button" value="">
-                      정보
-                    </button>&nbsp;&nbsp;
-                    <button type="button" value="">
                       퇴장
                     </button>
                   </td>
                 </tr>
                 <tr>
-                  <td>박예진</td>
+                  <td><a href='../Mypage' target='_blank'>박예진</a></td>
                   <td>여</td>
                   <td>100%</td>
                   <td>
@@ -137,9 +131,6 @@ function Managerpage() {
                     </select>
                   </td>
                   <td className="">
-                    <button type="button" value="">
-                      정보
-                    </button>&nbsp;&nbsp;
                     <button type="button" value="">
                       퇴장
                     </button>
@@ -147,6 +138,10 @@ function Managerpage() {
                 </tr>
               </tbody>
             </table>
+            <div style={{margin : '10px', textAlign : 'right'}}>
+            <input type='submit' value={"저장"}></input>
+            </div>
+            </form>
 
             <div className="page">
               <span>
@@ -211,11 +206,6 @@ function Managerpage() {
             </div>
           </div>
           <div className="mt-10 textRight">
-            <a href="#" target="_blank">
-              <button type="button" value="">
-                가입양식
-              </button>
-            </a>
           </div>
         </div>
 
@@ -261,11 +251,6 @@ function Managerpage() {
             </div>
           </div>
           <div className="mt-10 textRight">
-            <a href="#" target="_blank">
-              <button type="button" value="">
-                방장 변경
-              </button>&nbsp;&nbsp;
-            </a>
             <a href="GroupDeletion" target="_blank">
               <button type="button" value="">
                 그룹 삭제
