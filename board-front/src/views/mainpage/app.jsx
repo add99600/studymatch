@@ -30,11 +30,11 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/signup' element={<Signup />} />
-          <Route path='/poster' element={<Posterpage />} />
+          <Route path='/poster/:id' element={<Posterpage />} />
           <Route path='/commwrite' element={<CommWrite />} />
           <Route path='/mypage' element={<MyPage />} />
           <Route path='/ManageList' element={<ManageList />} />
-          <Route path='/Managerpage' element={<Managerpage />} />
+          <Route path='/Managerpage/:id' element={<Managerpage />} />
           <Route path='/ManagerModify' element={<ManagerModify />} />
           <Route path='/StudyGroup/:id' element={<StudyGroup />} />
           <Route path='/LeaveGroup' element={<LeaveGroup />} />
@@ -57,6 +57,35 @@ const Home = () => {
     margin: '50px 0', // 테이블과 페이지넘버 간격
   };
 
+  // 쿠키에서 x_auth 쿠키 가져오기
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    
+    if (parts.length === 2) {
+      return parts.pop().split(';').shift();
+    }
+  }
+  const token = getCookie('x_auth'); 
+
+
+  const [mergedArray, setMergedArray] = useState([]);
+  
+  // 해당 쿠키를 가진 유저의 소속 그룹 찾기
+  axios.post('/api/updateUserMakegroup/find', { token })
+  .then((response) => {
+    if (response.data.success);
+      // 내가 만들 그룹과 소속 그룹을 하나의 배열로 만듦
+      const makegroupArray = response.data.user.Makegroup || [];
+      const ingroupArray = response.data.user.ingroup || [];
+      const mergedArray = [...makegroupArray, ...ingroupArray];
+      console.log(mergedArray);
+      setMergedArray(mergedArray);
+    })
+    .catch((error) => {
+      console.error('서버 요청 실패:', error);
+  });
+
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalDataItems, setTotalDataItems] = useState(0); // 총 데이터 개수
@@ -68,11 +97,9 @@ const Home = () => {
   }, [currentPage]);
 
   const fetchData = () => {
-
     axios.get('/api/group/posts')
     .then((response) => {
       if (response.data.success);
-        console.log(response.data)
         const reversedPosts = response.data.posts.reverse();
         setTotalDataItems(reversedPosts.length); // 총 데이터 길이
         const startIndex = (currentPage - 1) * pageSize;
@@ -133,9 +160,15 @@ const Home = () => {
               <tr key={post._id}>
                 <td>{index + 1}</td>
                 <th>
-                  <Link to={`/StudyGroup/${post._id}`}>
-                    <a>{post.title}</a>
-                  </Link>
+                  {mergedArray.includes(post._id) ? (
+                    <Link to={`/StudyGroup/${post._id}`}>
+                      <a>{post.title}</a>
+                    </Link>
+                  ) : (
+                    <Link to={`/poster/${post._id}`}>
+                      <a>{post.title}</a>
+                    </Link>
+                  )}
                   <p>{post.content}</p>
                 </th>
                 <td>{new Date(post.createdAt).toLocaleDateString()}</td>

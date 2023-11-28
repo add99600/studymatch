@@ -105,6 +105,7 @@ function StudyGroup() {
               <p>{new Date(pst.createdAt).toLocaleDateString()}</p>
               <div className="textRightLine"></div>
               <p>회원수 : 20</p>
+              <Link to={`/Managerpage/${pst._id}`}>관리 페이지</Link>
             </div>
           </div>
         </section>
