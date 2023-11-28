@@ -22,6 +22,18 @@ const userSchema = mongoose.Schema({
       type: String,
       maxlength:50
   },
+  ingroup: [
+    {
+      type: String,
+      maxlength: 500,
+    },
+  ],
+  Makegroup: [
+    {
+      type: String,
+      maxlength: 500,
+    },
+  ],
   role:{
       type:Number,
       default:0

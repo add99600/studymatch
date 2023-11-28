@@ -17,7 +17,12 @@ const grouppostSchema = new mongoose.Schema({
   },
   comments: [
     {
-      text: {
+      title: {
+        type: String,
+        required: true,
+      },
+
+      content: {
         type: String,
         required: true,
       },

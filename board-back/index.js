@@ -29,6 +29,9 @@ app.use('/', boardRouter)
 const groupRouter = require('./routes/group/group'); // group.js 파일을 가져옴
 app.use('/', groupRouter)
 
+const UserInfoRouter = require('./routes/User/UserInfo'); // group.js 파일을 가져옴
+app.use('/', UserInfoRouter)
+
 
 app.get('/', (req, res) => res.send('hello word'))
 
