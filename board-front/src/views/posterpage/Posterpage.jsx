@@ -21,7 +21,12 @@ function Posterpage() {
         }
       })
       .catch((error) => {
-        console.error('서버 요청 실패:', error);
+        if (error.response && error.response.status === 400) {
+          console.error('400 에러:', error.response.data.message);
+          alert(error.response.data.message)
+        } else {
+          console.error('서버 요청 실패:', error);
+        }
       });
   };
 

@@ -1,12 +1,54 @@
 import React from 'react';
 import './common.css';
 import './member_reg.css';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 function Managerpage() {
+
+  // 신청자 목록 가져오기
+  const [applicantsData, setApplicantsData] = useState([]);
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/group/posts/${id}`);
+        const applicants = response.data.post.applicants;
+        const userIds = applicants.map(applicant => applicant.userId);
+
+        const userRequests = userIds.map(async userId => {
+          try {
+            const userResponse = await axios.get(`/api/updateUserMakegroup/find/${userId}`);
+            return userResponse.data;
+          } catch (error) {
+            return { error: true, message: '사용자 정보를 가져오는 중 오류 발생' };
+          }
+        });
+
+        const responses = await Promise.allSettled(userRequests);
+
+        const newData = responses
+          .filter(response => !response.error)
+          .map(response => ({
+            email: response.value.user.email,
+            // 다른 필요한 정보도 추가할 수 있음
+          }));
+
+        setApplicantsData(newData);
+      } catch (error) {
+        console.error('서버 요청 실패:', error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+
   return (
     <div className="mainBox">
-
-
       <section className="roomInfo">
         <div className="roomBox">
           <p className="textLine">스터디 이름</p>
@@ -178,29 +220,21 @@ function Managerpage() {
                     <th>가입승인</th>
                   </tr>
                 </thead>
+                {/*신청자 목록*/}
                 <tbody>
-                  <tr>
-                    <td>신짱구</td>
-                    <td>남</td>
-                    <td>
-                      <a href="#">[보기]</a>
-                    </td>
-                    <td>
-                      <a href="#">[승인]</a>&nbsp;
-                      <a href="#">[거절]</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>봉미선</td>
-                    <td>여</td>
-                    <td>
-                      <a href="#">[보기]</a>
-                    </td>
-                    <td>
-                      <a href="#">[승인]</a>&nbsp;
-                      <a href="#">[거절]</a>
-                    </td>
-                  </tr>
+                  {applicantsData.map(applicant => (
+                    <tr key={applicant.email}>
+                      <td>{applicant.email}</td>
+                      <td>성별 정보</td>
+                      <td>
+                        <a href="#">[보기]</a>
+                      </td>
+                      <td>
+                        <a href="#">[승인]</a>&nbsp;
+                        <a href="#">[거절]</a>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

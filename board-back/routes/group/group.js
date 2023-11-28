@@ -35,8 +35,7 @@ router.post('/api/group/posts', auth, async (req, res) => {
 // 그룹 조회
 router.get("/api/group/posts", async (req, res) => {
     try {
-      // 모든 커뮤니티 포스트 조회하되, content 필드를 선택하지 않음
-      const posts = await groupPost.find({}, 'title content author comments createdAt updatedAt images')
+      const posts = await groupPost.find({}, 'title content author comments createdAt updatedAt applicants')
         .populate("author")
         .populate("comments.author");
   
@@ -58,7 +57,7 @@ router.get("/api/group/posts", async (req, res) => {
 router.get("/api/group/posts/:postId", auth, async (req, res) => {
   try {
     const postId = req.params.postId;
-    const post = await groupPost.findById(postId, 'title content author createdAt updatedAt images')
+    const post = await groupPost.findById(postId, 'title content author createdAt updatedAt applicants')
 
     if (!post) {
       return res.status(404).json({
@@ -169,6 +168,15 @@ router.post("/api/group/apply/:postId", auth, async (req, res) => {
     const postId = req.params.postId;
     const { additionalField } = req.body;
     const post = await groupPost.findById(postId);
+
+    const isAlreadyApplied = post.applicants.some(applicant => applicant.userId.equals(req.user._id));
+
+    if (isAlreadyApplied) {
+      return res.status(400).json({
+        success: false,
+        message: '이미 신청한 그룹입니다.',
+      });
+    }
 
     post.applicants.push({
       userId: req.user._id,
