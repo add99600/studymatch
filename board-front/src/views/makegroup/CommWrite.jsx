@@ -21,7 +21,6 @@ const CommWrite = () => {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    console.log('onSubmitHandler 호출됨');
 
     const data = {
       title: Title,
@@ -29,15 +28,31 @@ const CommWrite = () => {
     };
   
     axios.post('/api/group/posts', data)
-    .then((response) => {
-      console.log(response.data);
-      if (response.data.success)
-        console.log('글 조회 성공');
-    })
-    .catch((error) => {
-      console.error('서버 요청 실패:', error);
-    });
-  }
+      .then((response) => {
+        console.log(response.data);
+        console.log(response.data.post._id);
+        if (response.data.success) {
+        
+          const groupId = response.data.post._id;
+
+          axios.post('/api/updateUserMakegroup', { groupId })
+            .then((updateResponse) => {
+              console.log(updateResponse.data);
+              if (updateResponse.data.success) {
+                console.log('사용자 정보 업데이트 성공');
+              } else {
+                console.error('사용자 정보 업데이트 실패:', updateResponse.data.message);
+              }
+            })
+            .catch((updateError) => {
+              console.error('사용자 정보 업데이트 중 오류:', updateError);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error('서버 요청 실패:', error);
+      });
+  };
 
   return (
     <div className="container marketing" style={{ paddingTop: '50px' }}>

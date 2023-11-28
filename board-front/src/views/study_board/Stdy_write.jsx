@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { useParams} from 'react-router-dom';
 
 const Stdywrite = () => {
 
@@ -21,6 +22,9 @@ const Stdywrite = () => {
     setContent(event.target.value);
   };
 
+
+  const { id } = useParams(); // URL에서 id 값을 추출
+
   const onSubmitHandler = (event) => {
     event.preventDefault();
     console.log('onSubmitHandler 호출됨');
@@ -30,15 +34,19 @@ const Stdywrite = () => {
       content: Content,
     };
 
-    axios.post('/api/community/posts', data)
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) 
-          console.log('글 등록 성공!');
-      })
-      .catch((error) => {
-        console.error('서버 요청 실패:', error);
-      });
+    axios.post(`/api/group/posts/${id}/comments`, data)
+    .then((response) => {
+      console.log(response.data);
+      if (response.data.success) 
+        console.log('글 등록 성공!');
+    })
+    .catch((error) => {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios 에러 발생:', error.response);
+      } else {
+        console.error('서버 요청 실패:', error.message);
+      }
+    });
   };
 
   return (

@@ -3,6 +3,9 @@ import './Posterpage.css'; // Import your CSS file
 import Button from 'react-bootstrap/Button';
 
 function Posterpage() {
+
+  
+
   return (
     <div class="fram">
       <div class="profile-section">

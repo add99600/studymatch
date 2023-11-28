@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams} from 'react-router-dom';
 import './common.css';
 import './member.css';
 import { Link } from 'react-router-dom';
@@ -10,33 +11,87 @@ import Calendar from './Calendar';
 function StudyGroup() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const [postData, setPostData] = useState([]);
+  const generateCalendar = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios({
-          method: 'GET',
-          url: '/api/community/posts',
-        });
-        console.log(response.data);
-        setPostData(response.data.posts || []);
-      } catch (error) {
-        console.error('서버 요청 실패:', error);
-        alert('불러오기에 실패했습니다.');
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1).getDay();
+
+    let date = 1;
+
+    let calendarRows = [];
+    for (let i = 0; i < 6; i++) {
+      let rowCells = [];
+      for (let j = 0; j < 7; j++) {
+        if (i === 0 && j < firstDay) {
+          rowCells.push(<td key={j}></td>);
+        } else if (date <= daysInMonth) {
+          rowCells.push(<td key={j}>{date}</td>);
+          date++;
+        } else {
+          rowCells.push(<td key={j}></td>);
+        }
       }
-    };
-  
-    fetchData();
-  }, []);
+      calendarRows.push(<tr key={i}>{rowCells}</tr>);
+    }
 
-  
+    return calendarRows;
+  };
+
+  const handlePrevMonthClick = () => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() - 1);
+    setCurrentDate(newDate);
+  };
+
+  const handleNextMonthClick = () => {
+    const newDate = new Date(currentDate);
+    newDate.setMonth(newDate.getMonth() + 1);
+    setCurrentDate(newDate);
+  };
+
+  const calendarRows = generateCalendar();
+
+  const { id } = useParams(); // URL에서 id 값을 추출
+  const [pst, postData]= useState({});
+  const [pst1, postData1]= useState([]);
+
+    axios({
+      method: 'GET',
+      url: `/api/group/posts/${id}`,
+      withCredentials: true,
+    })
+      .then(response => {
+
+        postData(response.data.post);
+      })
+      .catch(error => {
+        console.error('서버 요청 실패:', error);
+        {/*alert('불러오기에 실패했습니다.');*/}
+      });
+
+
+      axios({
+        method: 'GET',
+        url: `/api/group/posts/${id}/comments`,
+      })
+        .then(response => {
+
+          postData1(response.data.post.comments);
+        })
+        .catch(error => {
+          console.error('서버 요청 실패:', error);
+          {/*alert('불러오기에 실패했습니다.');*/}
+        });
+
+
   return (
     <div className="container marketing">
       <main className="mainBox">
         <section className="roomInfo">
           <div className="roomBox">
-            <p className="textLine">스터디 이름</p>
+            <p className="textLine">{pst.title}</p>
             <div className="textLine">
               <p>장소</p>
               <div className="textRightLine"></div>
@@ -47,7 +102,7 @@ function StudyGroup() {
             <div className="textLine">
               <p>방장 : 박예진</p>
               <div className="textRightLine"></div>
-              <p>개설일 : 23.10.04</p>
+              <p>{new Date(pst.createdAt).toLocaleDateString()}</p>
               <div className="textRightLine"></div>
               <p>회원수 : 20</p>
             </div>
@@ -137,25 +192,30 @@ function StudyGroup() {
                         <th></th>
                       </tr>
                     </thead>
+
                     <tbody>
-                      {postData.map((post, index) => (
-                        <tr key={index}>
-                          <td>{post.title}</td>
-                          <td>{post.author.email}</td>
-                          <td>{new Date(post.createdAt).toLocaleDateString()}</td>
-                          <td>1</td>
-                          <td>
-                            <span>
-
+                      {pst1.length > 0 ? (
+                        pst1.map((comment, index) => (
+                          <tr key={index}>
+                            <td>{comment.title}</td>
+                            <td>{comment.author.email}</td>
+                            <td>{comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : ''}</td>
+                            <td>1</td>
+                            <td>
+                              <span>
                                 <button type="button">보기</button>
-
-                            </span>
-                          </td>
+                              </span>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="5">작성 글이 없습니다.</td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
+                   
                   </table>
-
 
                 <div className="page">
                   <span>
@@ -174,7 +234,7 @@ function StudyGroup() {
                 <div style={{textAlign : 'right', padding : '0px 20px'}}>
                   <span>
                     <button>
-                      <Link to="/Stdywrite">
+                      <Link to={`/Stdywrite/${pst._id}`}>
                         추가
                       </Link>
                     </button>

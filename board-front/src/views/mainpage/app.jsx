@@ -36,12 +36,14 @@ function App() {
           <Route path='/ManageList' element={<ManageList />} />
           <Route path='/Managerpage' element={<Managerpage />} />
           <Route path='/ManagerModify' element={<ManagerModify />} />
-          <Route path='/StudyGroup' element={<StudyGroup />} />
+          <Route path='/StudyGroup/:id' element={<StudyGroup />} />
           <Route path='/LeaveGroup' element={<LeaveGroup />} />
           <Route path='/GroupEvaluation' element={<GroupEvaluation />} />
           <Route path='/GroupDeletion' element={<GroupDeletion />} />
           <Route path='/Stdywrite' element={<Stdywrite />} />
           <Route path='/MygroupList' element={<MygroupList />} />
+          <Route path='/Stdywrite/:id' element={<Stdywrite />} />
+
         </Routes>
       </BrowserRouter>
     );
@@ -131,7 +133,7 @@ const Home = () => {
               <tr key={post._id}>
                 <td>{index + 1}</td>
                 <th>
-                  <Link to={`/StudyGroup`}>
+                  <Link to={`/StudyGroup/${post._id}`}>
                     <a>{post.title}</a>
                   </Link>
                   <p>{post.content}</p>
