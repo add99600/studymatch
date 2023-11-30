@@ -197,7 +197,7 @@ const Home = () => {
         <Pagination.Next onClick={fetchNextPage} />
       </Pagination>
       </div>
-      <Link to='/commwrite' target='_blank'>
+      <Link to='/commwrite'>
         <button className="custom-btn btn-11">
           그룹 만들기
         </button>
