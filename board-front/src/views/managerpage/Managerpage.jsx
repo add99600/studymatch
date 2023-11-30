@@ -6,20 +6,61 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 function Managerpage() {
-
   // 신청자 목록 가져오기
   const [applicantsData, setApplicantsData] = useState([]);
 
   const { id } = useParams();
+
+  const handleApprove = async (userId) => {
+    try {
+      // 서버에 승인 요청 보내기
+      await axios.post(`/api/group/posts/${id}/approve`, { userId });
+
+      // 승인 후 상태 업데이트
+      setApplicantsData(prevData => {
+        const newData = prevData.map(applicant => {
+          if (applicant.userId === userId) {
+            return { ...applicant, isApproved: true };
+          }
+          return applicant;
+        });
+        return newData;
+      });
+      
+      // isApproved가 true인 지원자 추출
+      const response = await axios.get(`/api/group/posts/${id}`);
+      const applicants = response.data.post.applicants;
+      const approvedApplicants = applicants.filter(applicant => applicant.isApproved);
+
+      await Promise.all(approvedApplicants.map(async applicant => {
+        const { userId } = applicant;
+        await axios.post(`/api/updateUseringroup/${id}`, { userId });
+      }));
+
+    } catch (error) {
+      console.error('승인 중 오류 발생:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`/api/group/posts/${id}`);
         const applicants = response.data.post.applicants;
+
+        // isApproved가 true인 지원자 추출
+        const approvedApplicants = applicants.filter(applicant => applicant.isApproved);
+
+        // true값인 userId
+        const userId = approvedApplicants.map(applicant => applicant.userId);
+
+        // 전체 신청자 리스트
         const userIds = applicants.map(applicant => applicant.userId);
 
-        const userRequests = userIds.map(async userId => {
+        // true값인 userId는 삭제
+        const filteredUserIds = userIds.filter(id => !userId.includes(id));
+
+        const userRequests = filteredUserIds.map(async userId => {
           try {
             const userResponse = await axios.get(`/api/updateUserMakegroup/find/${userId}`);
             return userResponse.data;
@@ -28,23 +69,23 @@ function Managerpage() {
           }
         });
 
+        // 모든 호출이 완료되고 오류가 없을 시 사용자 데이터 추출
         const responses = await Promise.allSettled(userRequests);
 
         const newData = responses
           .filter(response => !response.error)
           .map(response => ({
             email: response.value.user.email,
-            // 다른 필요한 정보도 추가할 수 있음
+            userId: response.value.user._id
           }));
-
         setApplicantsData(newData);
       } catch (error) {
         console.error('서버 요청 실패:', error);
       }
     };
-
     fetchData();
   }, [id]);
+
 
 
   return (
@@ -209,7 +250,6 @@ function Managerpage() {
             <h4 className="textCenter p-10">
               스터디 가입신청
             </h4>
-
             <div>
               <table className="joinTable">
                 <thead>
@@ -222,19 +262,28 @@ function Managerpage() {
                 </thead>
                 {/*신청자 목록*/}
                 <tbody>
-                  {applicantsData.map(applicant => (
-                    <tr key={applicant.email}>
-                      <td>{applicant.email}</td>
-                      <td>성별 정보</td>
-                      <td>
-                        <a href="#">[보기]</a>
-                      </td>
-                      <td>
-                        <a href="#">[승인]</a>&nbsp;
-                        <a href="#">[거절]</a>
-                      </td>
-                    </tr>
-                  ))}
+                {applicantsData.map(applicant => (
+                  <tr key={applicant.userId}>
+                    <td>{applicant.email}</td>
+                    <td>성별 정보</td>
+                    <td>
+                      <a href="#">[보기]</a>
+                    </td>
+                    <td>
+                      {applicant.isApproved ? (
+                        '이미 승인됨'
+                      ) : (
+                        <>
+                          <a href="#" onClick={() => handleApprove(applicant.userId)}>
+                            [승인]
+                          </a>
+                          &nbsp;
+                          <a href="#">[거절]</a>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
                 </tbody>
               </table>
             </div>

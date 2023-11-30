@@ -162,7 +162,7 @@ router.get("/api/group/posts/:postId/comments", auth, async (req, res) => {
   }
 });
 
-// 그룹 신청
+// 그룹 가입 신청
 router.post("/api/group/apply/:postId", auth, async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -180,7 +180,7 @@ router.post("/api/group/apply/:postId", auth, async (req, res) => {
 
     post.applicants.push({
       userId: req.user._id,
-      additionalField,
+      additionalField
     });
 
     await post.save(); 
@@ -198,5 +198,50 @@ router.post("/api/group/apply/:postId", auth, async (req, res) => {
       });
   }
 })
+
+router.post('/api/group/posts/:id/approve', auth, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  try {
+    // Find the post based on the post ID
+    const post = await groupPost.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: '해당 그룹 포스트를 찾을 수 없습니다.',
+      });
+    }
+
+    // applicants 배열에서 userid를 찾음
+    const applicant = post.applicants.find(applicant => applicant.userId.toString() === userId);
+
+    if (!applicant) {
+      return res.status(404).json({
+        success: false,
+        message: '해당 신청자를 찾을 수 없습니다.',
+      });
+    }
+
+    // Update the isApproved field to true
+    applicant.isApproved = true;
+
+    // Save the updated post
+    await post.save();
+
+    return res.status(200).json({
+      success: true,
+      message: '성공적으로 승인되었습니다.',
+      post: post,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: '승인에 실패했습니다.',
+      error: err.message,
+    });
+  }
+});
 
 module.exports = router;
