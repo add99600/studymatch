@@ -140,7 +140,7 @@ function StudyGroup() {
                       <td>2</td>
                       <td>
                         <span>
-                          <button type="button" value="">
+                          <button type="button" value="" className='border-button'>
                             보기
                           </button>
                         </span>
@@ -153,7 +153,7 @@ function StudyGroup() {
                       <td>2</td>
                       <td>
                         <span>
-                          <button type="button" value="">
+                          <button type="button" value="" className='border-button'>
                             보기
                           </button>
                         </span>
@@ -204,7 +204,7 @@ function StudyGroup() {
                             <td>1</td>
                             <td>
                               <span>
-                                <button type="button">보기</button>
+                                <button className='border-button' type="button">보기</button>
                               </span>
                             </td>
                           </tr>
@@ -234,7 +234,7 @@ function StudyGroup() {
                 </div>
                 <div style={{textAlign : 'right', padding : '0px 20px'}}>
                   <span>
-                    <button>
+                    <button className='border-button'>
                       <Link to={`/Stdywrite/${pst._id}`}>
                         추가
                       </Link>
@@ -253,8 +253,8 @@ function StudyGroup() {
           </div>
         </section>
         <div className="btnBox">
-          <a href="LeaveGroup" target='_blank'>퇴부신청</a>
-          <a href="GroupEvaluation" target='_blank'>그룹평가</a>
+          <button className='border-button'>퇴부신청</button>
+          <button className='border-button'>그룹평가</button>
         </div>
       </main>
     </div>

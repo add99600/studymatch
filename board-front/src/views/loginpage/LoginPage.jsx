@@ -29,15 +29,16 @@ function LoginPage() {
         if (response.data.loginSuccess) {
           
           console.log('로그인 성공!');
-          console.log('사용자 ID:', response.data.userId);
+          console.log('사용자 Email:', response.data.userId);
 
           const token = Cookies.get('x_auth');
           console.log('서버로부터 받은 토큰:', token);
       
           window.location.reload(); // 로그인 성공 시 페이지 새로고침
           alert('환영합니다!');
+          
 
-          //window.location.href = '/';
+          window.location.href = '/';
 
         } else {
           alert('입력된 정보가 맞지 않습니다.');
@@ -181,7 +182,7 @@ function LoginPage() {
           style={styles.input} 
           onChange={onEmailHandler}
           type="text" 
-          placeholder="Email" 
+          placeholder="ID" 
           id="username" />
 
         <label style={styles.label} htmlFor="password">Password</label>

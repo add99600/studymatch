@@ -5,10 +5,17 @@ import ManageList from '../managerpage/ManageList';
 
 function MyPage() {
   const [currentPage, setCurrentPage] = useState('소속그룹'); // Default page
-
   const handleButtonClick = (page) => {
     setCurrentPage(page);
   };
+
+  const buttonStyle = {
+    padding: '10px',
+    backgroundColor: 'white',
+    borderRadius: '5px', // 둥근 모서리 설정
+    border: '1px solid gray', // 회색 테두리 설정
+  };
+
 
   return (
     <>
@@ -41,10 +48,16 @@ function MyPage() {
         <div className="face f2">
         </div>
         </div>
-        <div className='body'>
+        <div className='bodyy'>
           <div style={{ marginTop: '20px' }}>
-            <button onClick={() => handleButtonClick('소속그룹')}>나의 소속그룹</button>
-            <button onClick={() => handleButtonClick('그룹관리')}>나의 그룹 관리</button>
+            <button
+              style={buttonStyle}
+              onClick={() => handleButtonClick('소속그룹')}
+            >나의 소속그룹</button>&nbsp;&nbsp;
+            <button
+              style={buttonStyle}
+              onClick={() => handleButtonClick('그룹관리')}
+            >나의 그룹 관리</button>
           </div>
           <div style={{ marginTop: '20px' }}>
             {currentPage === '소속그룹' && 

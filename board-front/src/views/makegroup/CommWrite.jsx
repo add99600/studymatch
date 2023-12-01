@@ -68,12 +68,12 @@ const CommWrite = () => {
                 <div className="board_write">
                   <div className="title">
                     <dl>
-                      <dt>그룹 이름을 작성해주세요</dt>
+                      <dt>그룹명을 작성해주세요</dt>
                       <dd>
                         <input 
                           type="title" 
                           onChange={onTitleHandler}
-                          placeholder="그룹 이름 작성" 
+                          placeholder="그룹명 작성" 
                           id="title" 
                           rows={8} style={{ fontSize: '1.4rem', width: '100%' }} />
                       </dd>
@@ -96,7 +96,7 @@ const CommWrite = () => {
                     작성
                   </Button>
 
-                <Link>
+                <Link to={'/'}>
                 <Button variant="danger" style={{ width: '100px', height: '40px', margin: '5px', fontSize: '1.2rem' }}>
                   취소
                 </Button>

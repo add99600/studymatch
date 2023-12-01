@@ -154,3 +154,18 @@ table.goneTable {
 a:hover{
     color: gray;
 }
+
+.border-button {
+    padding: 3px;
+    border-color: #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* 버튼이 링크인 경우에 밑줄 제거 */
+    color: inherit; /* 기본 텍스트 색상 사용 */
+  }
+  
+  .border-button:hover {
+    /* 마우스 호버 시 스타일 변경 가능 */
+    color: gray;
+    border-color: gray;
+  }

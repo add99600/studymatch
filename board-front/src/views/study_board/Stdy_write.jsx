@@ -8,6 +8,7 @@ import { useParams} from 'react-router-dom';
 
 const Stdywrite = () => {
 
+
   const navigate = useNavigate();
 
   const [Title, setTitle] = useState('');

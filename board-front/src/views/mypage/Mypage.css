@@ -73,8 +73,8 @@ object-fit: cover;
   margin: '10px';
 }
 
-.body{
-  margin: 0, auto;
+.bodyy{
   align-items: center;
-  margin : 30px;
+  margin : 30px 30px 30px 200px;
+
 }

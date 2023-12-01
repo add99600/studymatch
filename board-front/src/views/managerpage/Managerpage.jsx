@@ -162,9 +162,9 @@ function Managerpage() {
                     </select>
                   </td>
                   <td className="">     
-                    <button type="button" value="">
-                      퇴장
-                    </button>
+                    <a href='#'>
+                      [퇴장]
+                    </a>
                   </td>
                 </tr>
                 <tr>
@@ -188,9 +188,9 @@ function Managerpage() {
                     </select>
                   </td>
                   <td className="">
-                    <button type="button" value="">
-                      퇴장
-                    </button>
+                   <a href='#'>
+                      [퇴장]
+                    </a>
                   </td>
                 </tr>
                 <tr>
@@ -214,15 +214,15 @@ function Managerpage() {
                     </select>
                   </td>
                   <td className="">
-                    <button type="button" value="">
-                      퇴장
-                    </button>
+                   <a href='#'>
+                      [퇴장]
+                    </a>
                   </td>
                 </tr>
               </tbody>
             </table>
             <div style={{margin : '10px', textAlign : 'right'}}>
-            <input type='submit' value={"저장"}></input>
+            <input type='submit' className='border-button' value={"저장"}></input>
             </div>
             </form>
 
@@ -335,7 +335,7 @@ function Managerpage() {
           </div>
           <div className="mt-10 textRight">
             <a href="GroupDeletion" target="_blank">
-              <button type="button" value="">
+              <button type="button" className='border-button' value="">
                 그룹 삭제
               </button>
             </a>

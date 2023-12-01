@@ -52,9 +52,21 @@ const Calendar = () => {
     <div className="container">
                 <div className="calendar-container">
                   <div className="calendar">
+                    <table className='calendar-buttons'>
+                      <tr>
+                      <td>
+                          <button className='no-border-button' onClick={handlePrevMonthClick}>◀</button>
+                        </td>
+                    <td>
                     <h2 id="calendar-header">
                       {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
                     </h2>
+                    </td>
+                    <td>
+                          <button className='no-border-button' onClick={handleNextMonthClick}>▶</button>
+                        </td>
+                      </tr>
+                    </table>
                     <table>
                       <thead>
                         <tr>
@@ -68,19 +80,6 @@ const Calendar = () => {
                         </tr>
                       </thead>
                       <tbody id="calendar-body">{calendarRows}</tbody>
-                    </table>
-                  </div>
-                  <div className="calendar-buttons">
-                    <table>
-                      <tr>
-                        <td>
-                          <button onClick={handlePrevMonthClick}>◀</button>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>
-                          <button onClick={handleNextMonthClick}>▶</button>
-                        </td>
-                      </tr>
                     </table>
                   </div>
                 </div>

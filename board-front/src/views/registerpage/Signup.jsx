@@ -151,7 +151,9 @@ function Signup() {
               console.log(response.data); 
               if (response.data.success) {
                   console.log('회원가입 성공!');
+                  alert('회원가입을 축하합니다! 로그인 후 이용해주세요.');
                   setEmailExists(false);
+                  window.location.href = '/login';
               } else {
                   setEmailExists(true);
               }
