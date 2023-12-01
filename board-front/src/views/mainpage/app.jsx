@@ -177,7 +177,7 @@ const Home = () => {
           </tbody>
           </table>
           <div style={{textAlign:'right', marginTop:'20px'}}>
-      <Link to='/commwrite'>
+      <Link to='/commwrite' target='_blank'>
         <button className="custom-btn btn-11">
           그룹 만들기
         </button>
@@ -204,7 +204,6 @@ const Home = () => {
         <Pagination.Next onClick={fetchNextPage} />
       </Pagination>
       </div>
-      
     </div>
     </section>
   );

@@ -26,7 +26,7 @@ function Managerpage() {
         });
         return newData;
       });
-      
+
       // isApproved가 true인 지원자 추출
       const response = await axios.get(`/api/group/posts/${id}`);
       const applicants = response.data.post.applicants;
