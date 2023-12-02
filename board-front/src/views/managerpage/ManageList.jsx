@@ -26,7 +26,6 @@ function ManageList() {
           if (response.data.success) {
             const makegroupData = response.data.user.Makegroup;
             setMakegroup(makegroupData);
-            console.log(response.data.user.Makegroup);
           }
         } catch (error) {
           console.error('서버 요청 실패:', error);
@@ -36,7 +35,6 @@ function ManageList() {
       fetchData();
     }, []); // 빈 배열을 넣어 한 번만 호출되도록 설정
 
-    //axios.post(`/api/group/posts/${Makegroup}`);
 
 
     return (

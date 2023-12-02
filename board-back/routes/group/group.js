@@ -57,6 +57,7 @@ router.get("/api/group/posts", async (req, res) => {
 router.get("/api/group/posts/:postId", auth, async (req, res) => {
   try {
     const postId = req.params.postId;
+    console.log('Received request for postId:', postId);
     const post = await groupPost.findById(postId, 'title content author createdAt updatedAt applicants')
 
     if (!post) {
@@ -66,21 +67,12 @@ router.get("/api/group/posts/:postId", auth, async (req, res) => {
       });
     }
 
-    // 작성자와 로그인한 사용자가 다른 경우, 권한 없음 반환
-    // if (req.user && post.author.toString() !== req.user._id.toString()) {
-    //   return res.status(403).json({
-    //     success: false,
-    //     message: "해당 포스트를 볼 권한이 없습니다.",
-    //   });
-    // }
-
     // 작성자 본인인 경우 content 필드를 포함하여 노출
     return res.status(200).json({
       success: true,
       post,
     });
   } catch (err) {
-    // 에러 처리
     return res.status(500).json({
       success: false,
       message: "포스트 조회에 실패했습니다.",
