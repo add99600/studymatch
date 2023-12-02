@@ -244,4 +244,31 @@ router.post('/api/group/posts/:id/approve', auth, async (req, res) => {
   }
 });
 
+
+// 그룹 검색
+router.post('/api/group/posts/search', auth, async (req, res) => {
+  const { searchQuery } = req.body;
+
+  try {
+    const posts = await groupPost.find({
+      "title": { "$regex": new RegExp(searchQuery, 'i') }
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: '검색이 완료되었습니다.',
+      posts: posts,
+    });
+
+  } catch (err) {
+    console.error('에러 발생:', err);
+    return res.status(500).json({
+      success: false,
+      message: '서버 오류가 발생했습니다.',
+      error: err.message,
+    });
+  }
+});
+
+
 module.exports = router;

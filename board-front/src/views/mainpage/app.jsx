@@ -91,6 +91,7 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalDataItems, setTotalDataItems] = useState(0); // 총 데이터 개수
+  const [searchResults, setSearchResults] = useState([]);
 
   const pageSize = 5; // 한 페이지 게시물 수
 
@@ -112,6 +113,25 @@ const Home = () => {
         console.error('서버 요청 실패:', error);
     });
   }
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // 검색 기능
+  const handleSearch = (event) => {
+    event.preventDefault();
+  
+    axios.post('/api/group/posts/search', { searchQuery } )
+      .then((response) => {
+        if (response.data.success) {
+          console.log(response.data);
+          setSearchResults(response.data.posts);
+        }
+      })
+      .catch((error) => {
+        console.error('서버 요청 실패:', error);
+      });
+  };
+
 
   const fetchNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -139,8 +159,13 @@ const Home = () => {
             <form action="">
               <div className="search-wrap">
                 <label htmlFor="search" className="blind">공지사항 내용 검색</label>
-                <input id="search" type="search" placeholder="검색어를 입력해주세요." />
-                <button type="submit" className="btn btn-dark">검색</button>
+                <input 
+                  id="search" 
+                  type="search" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)} 
+                  placeholder="검색어를 입력해주세요." />
+                <button type="submit" className="btn btn-dark" onClick={handleSearch}>검색</button>
               </div>
             </form>
           </div>
@@ -158,7 +183,26 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-            {posts.map((post, index) => (
+            {searchResults.length > 0 ? (
+            searchResults.map((result, index) => (
+              <tr key={result._id}>
+                <td>{index + 1}</td>
+                <th>
+                  {mergedArray.includes(result._id) ? (
+                    <Link to={`/StudyGroup/${result._id}`}>
+                      <a>{result.title}</a>
+                    </Link>
+                  ) : (
+                    <Link to={`/poster/${result._id}`}>
+                      <a>{result.title}</a>
+                    </Link>
+                  )}
+                </th>
+                <td>{new Date(result.createdAt).toLocaleDateString()}</td>
+              </tr>
+            ))
+          ) : (
+            posts.map((post, index) => (
               <tr key={post._id}>
                 <td>{index + 1}</td>
                 <th>
@@ -175,7 +219,8 @@ const Home = () => {
                 </th>
                 <td>{new Date(post.createdAt).toLocaleDateString()}</td>
               </tr>
-            ))}
+            ))
+          )}
           </tbody>
           </table>
           <div style={{textAlign:'right', marginTop:'20px'}}>
