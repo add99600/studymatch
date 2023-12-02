@@ -3,11 +3,14 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const CommWrite = () => {
 
   const [Title, setTitle] = useState('');
   const [Content, setContent] = useState('');
+
+  const navigate = useNavigate();
 
 
   const onTitleHandler = (event) => {
@@ -40,6 +43,8 @@ const CommWrite = () => {
               console.log(updateResponse.data);
               if (updateResponse.data.success) {
                 console.log('사용자 정보 업데이트 성공');
+                alert('그룹이 만들어졌습니다!')
+                navigate('/');
               } else {
                 console.error('사용자 정보 업데이트 실패:', updateResponse.data.message);
               }

@@ -57,34 +57,36 @@ function StudyGroup() {
   const [pst, postData]= useState({});
   const [pst1, postData1]= useState([]);
 
+  useEffect(() => {
     axios({
       method: 'GET',
       url: `/api/group/posts/${id}`,
       withCredentials: true,
     })
       .then(response => {
-
         postData(response.data.post);
+        console.log(response.data.post)
       })
       .catch(error => {
         console.error('서버 요청 실패:', error);
         {/*alert('불러오기에 실패했습니다.');*/}
       });
+    }, []);
 
-
+  useEffect(() => {
       axios({
         method: 'GET',
         url: `/api/group/posts/${id}/comments`,
       })
         .then(response => {
-
           postData1(response.data.post.comments);
+          console.log(response.data.post)
         })
         .catch(error => {
           console.error('서버 요청 실패:', error);
           {/*alert('불러오기에 실패했습니다.');*/}
         });
-
+    }, []);
 
   return (
     <div className="container marketing">

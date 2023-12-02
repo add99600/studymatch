@@ -71,20 +71,22 @@ const Home = () => {
 
   const [mergedArray, setMergedArray] = useState([]);
   
-  // 해당 쿠키를 가진 유저의 소속 그룹 찾기
-  axios.post('/api/updateUserMakegroup/find', { token })
-  .then((response) => {
-    if (response.data.success);
-      // 내가 만들 그룹과 소속 그룹을 하나의 배열로 만듦
-      const makegroupArray = response.data.user.Makegroup || [];
-      const ingroupArray = response.data.user.ingroup || [];
-      const mergedArray = [...makegroupArray, ...ingroupArray];
-      console.log(mergedArray);
-      setMergedArray(mergedArray);
-    })
-    .catch((error) => {
-      console.error('서버 요청 실패:', error);
-  });
+  useEffect(() => {
+
+    axios.post('/api/updateUserMakegroup/find', { token })
+      .then((response) => {
+        if (response.data.success) {
+          const makegroupArray = response.data.user.Makegroup || [];
+          const ingroupArray = response.data.user.ingroup || [];
+          const mergedArray = [...makegroupArray, ...ingroupArray];
+          console.log(mergedArray);
+          setMergedArray(mergedArray);
+        }
+      })
+      .catch((error) => {
+        console.error('서버 요청 실패:', error);
+      });
+  }, []); // Run only once on component mount
 
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -94,7 +96,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
-  }, [currentPage]);
+  }, [currentPage, mergedArray]);
 
   const fetchData = () => {
     axios.get('/api/group/posts')
@@ -137,7 +139,7 @@ const Home = () => {
             <form action="">
               <div className="search-wrap">
                 <label htmlFor="search" className="blind">공지사항 내용 검색</label>
-                <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="" />
+                <input id="search" type="search" placeholder="검색어를 입력해주세요." />
                 <button type="submit" className="btn btn-dark">검색</button>
               </div>
             </form>
@@ -177,7 +179,7 @@ const Home = () => {
           </tbody>
           </table>
           <div style={{textAlign:'right', marginTop:'20px'}}>
-      <Link to='/commwrite' target='_blank'>
+      <Link to='/commwrite'>
         <button className="custom-btn btn-11">
           그룹 만들기
         </button>
