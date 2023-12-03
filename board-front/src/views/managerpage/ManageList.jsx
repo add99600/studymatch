@@ -48,7 +48,7 @@ function ManageList() {
             <a href="Managerpage">
               <div className="roomBox">
                 <p className="textLine">
-                  스터디 이름
+                  테스트2
                 </p>
                 <div className="textLine">
                   <p>장소</p>
